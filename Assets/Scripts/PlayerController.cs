@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -6,6 +7,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float acceleration = 10f;
     [SerializeField] private float decceleration = 10f;
+    
+    [Header("World Boundaries")]
+    [SerializeField] private bool respectWorldBounds = true;
     
     [Header("Input Settings")]
     [SerializeField] private bool useVirtualJoystick = true;
@@ -48,7 +52,6 @@ public class PlayerController : MonoBehaviour
             inputDirection = virtualJoystick.GetInputDirection();
         }
         else {
-            // using keyboard for testing in Editor
             inputDirection.x = 0f;
             inputDirection.y = 0f;
             
@@ -69,9 +72,7 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(inputDirection.x) > 0.1f) {
             speed.x += inputDirection.x * acceleration * Time.deltaTime;
         }
-        else
-        {
-            // deceleration
+        else {
             var sign = Mathf.Sign(speed.x);
             speed.x = (Mathf.Abs(speed.x) - decceleration * Time.deltaTime) * sign;
             
@@ -82,9 +83,7 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(inputDirection.y) > 0.1f) {
             speed.y += inputDirection.y * acceleration * Time.deltaTime;
         }
-        else
-        {
-            // deceleration
+        else {
             var sign = Mathf.Sign(speed.y);
             speed.y = (Mathf.Abs(speed.y) - decceleration * Time.deltaTime) * sign;
             
@@ -98,16 +97,32 @@ public class PlayerController : MonoBehaviour
     
     private void ApplyMovement()
     {
-        curTransform.position += new Vector3(speed.x, speed.y, 0) * Time.deltaTime;
+        var newPosition = curTransform.position + new Vector3(speed.x, speed.y, 0) * Time.deltaTime;
+        
+        if (respectWorldBounds && WorldBounds.Instance != null)
+        {
+            newPosition = WorldBounds.Instance.ClampPosition(newPosition);
+            
+            if (Math.Abs(newPosition.x - WorldBounds.Instance.LeftBound) < Mathf.Epsilon || 
+                Math.Abs(newPosition.x - WorldBounds.Instance.RightBound) < Mathf.Epsilon)
+            {
+                speed.x = 0f;
+            }
+            
+            if (Math.Abs(newPosition.y - WorldBounds.Instance.BottomBound) < Mathf.Epsilon || 
+                Math.Abs(newPosition.y - WorldBounds.Instance.TopBound) < Mathf.Epsilon)
+            {
+                speed.y = 0f;
+            }
+        }
+        
+        curTransform.position = newPosition;
     }
     
     private void OnJoystickInput(Vector2 direction)
     {
-        // Этот метод вызывается когда джойстик двигается
-        // inputDirection уже обновляется в HandleInput()
     }
     
-    // Публичные методы для получения информации о движении
     public Vector2 GetCurrentSpeed() => speed;
     public Vector2 GetInputDirection() => inputDirection;
     public bool IsMoving() => speed.magnitude > 0.1f;
