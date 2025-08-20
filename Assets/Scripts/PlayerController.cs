@@ -6,22 +6,34 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float acceleration = 10f;
-    [SerializeField] private float decceleration = 10f;
     
-    [Header("World Boundaries")]
-    [SerializeField] private bool respectWorldBounds = true;
+    [Header("Physics Settings")]
+    [SerializeField] private bool usePhysicsMovement = true;
+    [SerializeField] private float drag = 5f;
+    [SerializeField] private ForceMode2D forceMode = ForceMode2D.Force;
     
     [Header("Input Settings")]
     [SerializeField] private bool useVirtualJoystick = true;
     [SerializeField] private VirtualJoystick virtualJoystick;
 
     private Transform curTransform;
-    private Vector2 speed;
+    private Rigidbody2D rb;
     private Vector2 inputDirection;
 
     private void Awake()
     {
         curTransform = transform;
+        rb = GetComponent<Rigidbody2D>();
+        
+        // Create Rigidbody2D if it doesn't exist
+        if (rb == null) {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+        }
+        
+        // Configure Rigidbody2D for top-down movement
+        rb.gravityScale = 0f; // No gravity for top-down games
+        rb.drag = drag;
+        rb.freezeRotation = true; // Prevent rotation
         
         if (virtualJoystick == null && useVirtualJoystick) {
             virtualJoystick = FindObjectOfType<VirtualJoystick>();
@@ -42,8 +54,16 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         HandleInput();
-        UpdateMovement();
-        ApplyMovement();
+    }
+    
+    private void FixedUpdate()
+    {
+        if (usePhysicsMovement) {
+            ApplyPhysicsMovement();
+        }
+        else {
+            ApplyDirectMovement();
+        }
     }
     
     private void HandleInput()
@@ -67,63 +87,55 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void UpdateMovement()
+    private void ApplyPhysicsMovement()
     {
-        if (Mathf.Abs(inputDirection.x) > 0.1f) {
-            speed.x += inputDirection.x * acceleration * Time.deltaTime;
-        }
-        else {
-            var sign = Mathf.Sign(speed.x);
-            speed.x = (Mathf.Abs(speed.x) - decceleration * Time.deltaTime) * sign;
-            
-            if (Mathf.Abs(speed.x) < 0.1f)
-                speed.x = 0f;
-        }
+        Vector2 force = inputDirection * acceleration;
         
-        if (Mathf.Abs(inputDirection.y) > 0.1f) {
-            speed.y += inputDirection.y * acceleration * Time.deltaTime;
-        }
-        else {
-            var sign = Mathf.Sign(speed.y);
-            speed.y = (Mathf.Abs(speed.y) - decceleration * Time.deltaTime) * sign;
-            
-            if (Mathf.Abs(speed.y) < 0.1f)
-                speed.y = 0f;
-        }
+        // Apply force to rigidbody
+        rb.AddForce(force, forceMode);
         
-        speed.x = Mathf.Clamp(speed.x, -maxSpeed, maxSpeed);
-        speed.y = Mathf.Clamp(speed.y, -maxSpeed, maxSpeed);
+        // Clamp velocity to max speed
+        if (rb.velocity.magnitude > maxSpeed) {
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
     }
     
-    private void ApplyMovement()
+    private void ApplyDirectMovement()
     {
-        var newPosition = curTransform.position + new Vector3(speed.x, speed.y, 0) * Time.deltaTime;
-        
-        if (respectWorldBounds && WorldBounds.Instance != null)
-        {
-            newPosition = WorldBounds.Instance.ClampPosition(newPosition);
-            
-            if (Math.Abs(newPosition.x - WorldBounds.Instance.LeftBound) < Mathf.Epsilon || 
-                Math.Abs(newPosition.x - WorldBounds.Instance.RightBound) < Mathf.Epsilon)
-            {
-                speed.x = 0f;
-            }
-            
-            if (Math.Abs(newPosition.y - WorldBounds.Instance.BottomBound) < Mathf.Epsilon || 
-                Math.Abs(newPosition.y - WorldBounds.Instance.TopBound) < Mathf.Epsilon)
-            {
-                speed.y = 0f;
-            }
-        }
-        
-        curTransform.position = newPosition;
+        // Direct velocity control (alternative method)
+        Vector2 targetVelocity = inputDirection * maxSpeed;
+        rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
     }
     
     private void OnJoystickInput(Vector2 direction)
     {
     }
     
-    public Vector2 GetCurrentSpeed() => speed;
+    // Public methods for getting movement information
+    public Vector2 GetCurrentVelocity() => rb != null ? rb.velocity : Vector2.zero;
     public Vector2 GetInputDirection() => inputDirection;
-    public bool IsMoving() => speed.magnitude > 0.1f;
+    public bool IsMoving() => rb != null && rb.velocity.magnitude > 0.1f;
+    public Rigidbody2D GetRigidbody() => rb;
+    
+    // Methods for external control
+    public void AddForce(Vector2 force, ForceMode2D mode = ForceMode2D.Impulse)
+    {
+        if (rb != null) {
+            rb.AddForce(force, mode);
+        }
+    }
+    
+    public void SetVelocity(Vector2 velocity)
+    {
+        if (rb != null) {
+            rb.velocity = velocity;
+        }
+    }
+    
+    public void Stop()
+    {
+        if (rb != null) {
+            rb.velocity = Vector2.zero;
+        }
+    }
 }
