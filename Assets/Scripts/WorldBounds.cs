@@ -10,13 +10,16 @@ public class WorldBounds : MonoBehaviour
     [SerializeField] private float topBound = 5f;
     [SerializeField] private float bottomBound = -5f;
     
+    [Header("Physical Boundaries")]
+    [SerializeField] private bool createPhysicalBounds = true;
+    [SerializeField] private float boundaryThickness = 1f;
+    [SerializeField] private string boundaryTag = "Boundary";
+    
     [Header("Gizmos")]
     [SerializeField] private bool showBounds = true;
     [SerializeField] private Color boundsColor = Color.red;
     
-    // Singleton для удобного доступа
-    
-    // Properties для получения границ
+    // Properties
     public float LeftBound => leftBound;
     public float RightBound => rightBound;
     public float TopBound => topBound;
@@ -25,11 +28,17 @@ public class WorldBounds : MonoBehaviour
     public Vector2 MinBounds => new Vector2(leftBound, bottomBound);
     public Vector2 MaxBounds => new Vector2(rightBound, topBound);
     
+    private Transform boundariesParent;
+    
     private void Awake()
     {
         // Singleton
         if (Instance == null) {
             Instance = this;
+            
+            if (createPhysicalBounds) {
+                CreatePhysicalBoundaries();
+            }
         }
         else {
             Destroy(gameObject);
@@ -67,6 +76,79 @@ public class WorldBounds : MonoBehaviour
         var distanceToBottom = position.y - bottomBound;
         
         return Mathf.Min(distanceToLeft, distanceToRight, distanceToTop, distanceToBottom);
+    }
+    
+    private void CreatePhysicalBoundaries()
+    {
+        // Create parent object for boundaries
+        GameObject boundariesContainer = new GameObject("World Boundaries");
+        boundariesContainer.transform.SetParent(transform);
+        boundariesParent = boundariesContainer.transform;
+        
+        // Create four boundary walls
+        CreateBoundaryWall("Left Wall", 
+            new Vector3(leftBound - boundaryThickness * 0.5f, (topBound + bottomBound) * 0.5f, 0),
+            new Vector3(boundaryThickness, topBound - bottomBound + boundaryThickness * 2, 1));
+            
+        CreateBoundaryWall("Right Wall",
+            new Vector3(rightBound + boundaryThickness * 0.5f, (topBound + bottomBound) * 0.5f, 0),
+            new Vector3(boundaryThickness, topBound - bottomBound + boundaryThickness * 2, 1));
+            
+        CreateBoundaryWall("Top Wall",
+            new Vector3((leftBound + rightBound) * 0.5f, topBound + boundaryThickness * 0.5f, 0),
+            new Vector3(rightBound - leftBound, boundaryThickness, 1));
+            
+        CreateBoundaryWall("Bottom Wall",
+            new Vector3((leftBound + rightBound) * 0.5f, bottomBound - boundaryThickness * 0.5f, 0),
+            new Vector3(rightBound - leftBound, boundaryThickness, 1));
+    }
+    
+    private void CreateBoundaryWall(string wallName, Vector3 position, Vector3 size)
+    {
+        GameObject wall = new GameObject(wallName);
+        wall.transform.SetParent(boundariesParent);
+        wall.transform.position = position;
+        wall.transform.localScale = size;
+        
+        // Add tag
+        if (!string.IsNullOrEmpty(boundaryTag)) {
+            wall.tag = boundaryTag;
+        }
+        
+        // Add BoxCollider2D
+        BoxCollider2D collider = wall.AddComponent<BoxCollider2D>();
+        
+        // Add Rigidbody2D as static
+        Rigidbody2D rb = wall.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Static;
+        rb.gravityScale = 0f;
+    }
+    
+    // Method to recreate boundaries when bounds change
+    [ContextMenu("Recreate Physical Boundaries")]
+    public void RecreatePhysicalBoundaries()
+    {
+        DestroyPhysicalBoundaries();
+        if (createPhysicalBounds) {
+            CreatePhysicalBoundaries();
+        }
+    }
+    
+    private void DestroyPhysicalBoundaries()
+    {
+        if (boundariesParent != null) {
+            DestroyImmediate(boundariesParent.gameObject);
+            boundariesParent = null;
+        }
+    }
+    
+    // Call this when bounds change at runtime
+    private void OnValidate()
+    {
+        // Only recreate in play mode and if we have physical bounds enabled
+        if (Application.isPlaying && createPhysicalBounds && boundariesParent != null) {
+            RecreatePhysicalBoundaries();
+        }
     }
     
     private void OnDrawGizmos()
