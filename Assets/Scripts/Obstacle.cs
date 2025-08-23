@@ -32,10 +32,11 @@ public class Obstacle : MonoBehaviour
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if (player != null) {
                 Vector2 pushDirection = (collision.transform.position - transform.position).normalized;
-                player.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
+                var rb = player.GetComponent<Rigidbody2D>();
+                if (rb != null) {
+                    rb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
+                }
             }
         }
     }
-    
-
 }

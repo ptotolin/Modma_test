@@ -42,7 +42,7 @@ public class PhysicsBasedMovement : MonoBehaviour, IUnitComponent, IMovement
         
         if (rb == null) return;
         
-        Vector2 force = direction * acceleration;
+        Vector2 force = direction.normalized * acceleration;
         rb.AddForce(force, forceMode);
         
         // Clamp velocity

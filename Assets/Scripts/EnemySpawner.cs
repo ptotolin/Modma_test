@@ -36,7 +36,7 @@ public class EnemySpawner : MonoBehaviour
         enemy.transform.position = pos;
         enemy.SetTarget(playerTransform);
         var healthComponent = enemy.GetUnitComponent<HealthComponent>();
-        enemy.GetUnitComponent<HealthComponent>().EventDeath += OnEnemyDie;
+        healthComponent.EventDeath += OnEnemyDie;
         enemies.Add(enemy);
     }
 

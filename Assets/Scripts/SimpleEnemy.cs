@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SimpleEnemy : Unit
@@ -9,9 +7,9 @@ public class SimpleEnemy : Unit
     private float checkTime = 0.5f;
     private float checkTimer = 0.0f;
 
-    protected override void Awake()
+    protected override void Start()
     {
-        base.Awake();
+        base.Start();
         
         movementComponent = GetMovement();
     }
@@ -23,15 +21,14 @@ public class SimpleEnemy : Unit
     
     private void Update()
     {
-        if (checkTimer > checkTime) {
-            checkTimer -= checkTime;
-            // Update direction
-            if (movementComponent != null) {
-                movementComponent.Move(target.position - transform.position);
-            }
-        }
-        else {
-            checkTimer += Time.deltaTime;
-        }
+        movementComponent?.Move(target.position - transform.position);
+        // if (checkTimer > checkTime) {
+        //     checkTimer -= checkTime;
+        //     // Update direction
+        //     
+        // }
+        // else {
+        //     checkTimer += Time.deltaTime;
+        // }
     }
 }

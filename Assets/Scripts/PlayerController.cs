@@ -1,39 +1,27 @@
-using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    [SerializeField] private float maxSpeed = 5f;
-    [SerializeField] private float acceleration = 10f;
-    
-    [Header("Physics Settings")]
-    [SerializeField] private bool usePhysicsMovement = true;
-    [SerializeField] private float drag = 5f;
-    [SerializeField] private ForceMode2D forceMode = ForceMode2D.Force;
-    
     [Header("Input Settings")]
     [SerializeField] private bool useVirtualJoystick = true;
     [SerializeField] private VirtualJoystick virtualJoystick;
 
-    private Transform curTransform;
-    private Rigidbody2D rb;
+    private IMovement movement;
     private Vector2 inputDirection;
+    private Unit unit;
 
     private void Awake()
     {
-        curTransform = transform;
-        rb = GetComponent<Rigidbody2D>();
+        // Получаем Unit компонент
+        unit = GetComponent<Unit>();
         
-        // Create Rigidbody2D if it doesn't exist
-        if (rb == null) {
-            rb = gameObject.AddComponent<Rigidbody2D>();
+        if (unit == null) {
+            Debug.LogError($"PlayerController on {gameObject.name} requires Unit component!");
+            return;
         }
         
-        // Configure Rigidbody2D for top-down movement
-        rb.gravityScale = 0f; // No gravity for top-down games
-        rb.drag = drag;
-        rb.freezeRotation = true; // Prevent rotation
+        // Подписываемся на событие инициализации Unit
+        unit.EventInitialized += OnUnitInitialized;
         
         if (virtualJoystick == null && useVirtualJoystick) {
             virtualJoystick = FindObjectOfType<VirtualJoystick>();
@@ -44,8 +32,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnUnitInitialized(Unit unit)
+    {
+        unit.EventInitialized -= OnUnitInitialized;
+        // Get movement component
+        movement = GetComponent<IMovement>();
+        
+        if (movement == null) {
+            Debug.LogError($"PlayerController on {gameObject.name} requires a component that implements IMovement!");
+            return;
+        }
+    }
+
     private void OnDestroy()
     {
+        if (unit != null) {
+            unit.EventInitialized -= OnUnitInitialized;
+        }
+        
         if (virtualJoystick != null) {
             virtualJoystick.OnJoystickMoved -= OnJoystickInput;
         }
@@ -58,12 +62,7 @@ public class PlayerController : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (usePhysicsMovement) {
-            ApplyPhysicsMovement();
-        }
-        else {
-            ApplyDirectMovement();
-        }
+        movement?.Move(inputDirection);
     }
     
     private void HandleInput()
@@ -87,55 +86,32 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void ApplyPhysicsMovement()
-    {
-        Vector2 force = inputDirection * acceleration;
-        
-        // Apply force to rigidbody
-        rb.AddForce(force, forceMode);
-        
-        // Clamp velocity to max speed
-        if (rb.velocity.magnitude > maxSpeed) {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
-        }
-    }
-    
-    private void ApplyDirectMovement()
-    {
-        // Direct velocity control (alternative method)
-        Vector2 targetVelocity = inputDirection * maxSpeed;
-        rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
-    }
+
     
     private void OnJoystickInput(Vector2 direction)
     {
     }
     
     // Public methods for getting movement information
-    public Vector2 GetCurrentVelocity() => rb != null ? rb.velocity : Vector2.zero;
+    public Vector2 GetCurrentVelocity() => movement?.Velocity ?? Vector2.zero;
     public Vector2 GetInputDirection() => inputDirection;
-    public bool IsMoving() => rb != null && rb.velocity.magnitude > 0.1f;
-    public Rigidbody2D GetRigidbody() => rb;
+    public bool IsMoving() => movement?.IsMoving ?? false;
+    public float GetMaxSpeed() => movement?.MaxSpeed ?? 0f;
     
     // Methods for external control
-    public void AddForce(Vector2 force, ForceMode2D mode = ForceMode2D.Impulse)
-    {
-        if (rb != null) {
-            rb.AddForce(force, mode);
-        }
-    }
-    
     public void SetVelocity(Vector2 velocity)
     {
-        if (rb != null) {
-            rb.velocity = velocity;
-        }
+        movement?.SetVelocity(velocity);
     }
     
     public void Stop()
     {
-        if (rb != null) {
-            rb.velocity = Vector2.zero;
-        }
+        movement?.Stop();
+        inputDirection = Vector2.zero;
+    }
+    
+    public void SetMaxSpeed(float newMaxSpeed)
+    {
+        movement?.SetMaxSpeed(newMaxSpeed);
     }
 }

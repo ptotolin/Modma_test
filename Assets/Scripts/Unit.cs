@@ -32,7 +32,7 @@ public class Unit : MonoBehaviour
         InitializeComponents();
     }
     
-    private void Start()
+    protected virtual void Start()
     {
         EventInitialized?.Invoke(this);
     }
