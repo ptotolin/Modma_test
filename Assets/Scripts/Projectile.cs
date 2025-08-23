@@ -82,8 +82,8 @@ public class Projectile : MonoBehaviour
         // Don't hit owner
         if (owner != null && other.transform == owner.transform) return;
         
-        // Try to damage unit
-        Unit targetUnit = other.GetComponent<Unit>();
+        // Temporary solution
+        Unit targetUnit = other.GetComponentInParent<Unit>();
         if (targetUnit != null) {
             DamageTarget(targetUnit);
         }
@@ -104,6 +104,14 @@ public class Projectile : MonoBehaviour
     
     private bool IsValidTarget(Collider2D other)
     {
+        // Получаем числовой индекс слоя
+        int layerIndex = other.gameObject.layer;
+
+        // Конвертируем индекс в название
+        string layerName = LayerMask.LayerToName(layerIndex);
+        
+        Debug.Log($"object: {other.gameObject.name}, layerName: {layerName}");
+        
         // Check if other is on target layers
         return (targetLayers.value & (1 << other.gameObject.layer)) != 0;
     }

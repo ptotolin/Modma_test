@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private const float IdleTime = 0.3f;
+    
     [Header("Input Settings")]
     [SerializeField] private bool useVirtualJoystick = true;
     [SerializeField] private VirtualJoystick virtualJoystick;
@@ -9,6 +11,11 @@ public class PlayerController : MonoBehaviour
     private IMovement movement;
     private Vector2 inputDirection;
     private Unit unit;
+    private bool moving;
+    private bool idling = true;
+    private float idleTimer = 0.0f;
+
+    public bool Idling => idling;
 
     private void Awake()
     {
@@ -83,6 +90,23 @@ public class PlayerController : MonoBehaviour
                 inputDirection.y = 1f;
             else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
                 inputDirection.y = -1f;
+        }
+
+        if (moving && inputDirection.magnitude < 0.01f) {
+            moving = false;
+        } else if (!moving && inputDirection.magnitude > 0.01f) {
+            moving = true;
+        }
+
+        if (!moving) {
+            idleTimer += Time.deltaTime;
+            if (idleTimer > IdleTime) {
+                idling = true;
+            }
+        }
+        else {
+            idling = false;
+            idleTimer = 0.0f;
         }
     }
     

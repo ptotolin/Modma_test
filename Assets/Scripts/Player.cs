@@ -1,26 +1,73 @@
-using System;
 using System.Text;
 using UnityEngine;
 
+[RequireComponent(typeof(WeaponComponent))]
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(PlayerController))]
 public class Player : Unit
 {
     private Rigidbody2D rb;
     private GUIStyle style;
-    private PhysicsBasedMovement movement;
+    private IMovement movement;
+    private Unit currentTarget;
+    private bool prevIdling;
+    private WeaponComponent weaponComponent;
+
+    private PlayerController playerController;
     
     protected override void Start()
     {
         base.Start();
         
         rb = GetComponent<Rigidbody2D>();
-        movement = GetComponent<PhysicsBasedMovement>();
-        style = new GUIStyle();
-        style.fontSize = 40;
+        movement = GetComponent<IMovement>();
+        playerController = GetComponent<PlayerController>();
+        weaponComponent = GetComponent<WeaponComponent>();
+        prevIdling = playerController.Idling;
     }
-    
+
+    private void Update()
+    {
+        if (!prevIdling && playerController.Idling) {
+            SetNewTarget();
+        }
+        else if (currentTarget == null) {
+            SetNewTarget();
+        }
+
+        if (currentTarget != null) {
+            weaponComponent.TryFire((currentTarget.transform.position - this.transform.position).normalized);
+        }
+        
+        prevIdling = playerController.Idling;
+    }
+
+    private void SetNewTarget()
+    {
+        if (currentTarget != null) {
+            currentTarget.EventDestroyed -= OnTargetDestroyed;
+        }
+        
+        // search for closest enemy
+        currentTarget = EnemyManager.Instance.GetClosestEnemy(transform.position);
+
+        if (currentTarget != null) {
+            currentTarget.EventDestroyed += OnTargetDestroyed;
+        }
+    }
+
+    private void OnTargetDestroyed(Unit unit)
+    {
+        currentTarget = null;
+    }
+
+
     private void OnGUI()
     {
         if (rb != null) {
+            style = new GUIStyle();
+            style.fontSize = 40;
+            
             var sb = new StringBuilder();
             sb.AppendLine($"Player speed: {rb.velocity.magnitude}");
             sb.AppendLine($"max speed: {movement.MaxSpeed}");

@@ -61,7 +61,7 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
         
         // Create projectile
         if (config.ProjectilePrefab != null) {
-            CreateProjectile(firePoint, direction, owner);
+            SpawnProjectile(firePoint, direction, owner);
         }
         
         EventFire?.Invoke();
@@ -74,7 +74,7 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
         StartCoroutine(ReloadCoroutine());
     }
     
-    private void CreateProjectile(Vector3 firePoint, Vector2 direction, Unit owner)
+    private void SpawnProjectile(Vector3 firePoint, Vector2 direction, Unit owner)
     {
         var projectileObject = Instantiate(config.ProjectilePrefab, firePoint, Quaternion.identity);
         

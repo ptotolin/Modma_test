@@ -1,16 +1,15 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [SerializeField] private int maxEnemies = 50;
     [SerializeField] private Rect generationArea;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private SimpleEnemy enemyPrefab;
     [SerializeField] private float newEnemySpawnTime = 20;
     
     private float spawnTimer = 0.0f;
-    private List<Unit> enemies = new();
 
     private void Start()
     {
@@ -19,10 +18,12 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        spawnTimer += Time.deltaTime;
-        if (spawnTimer > newEnemySpawnTime) {
-            spawnTimer -= newEnemySpawnTime;
-            SpawnEnemyRandomly();
+        if (EnemyManager.Instance.EnemyCount < maxEnemies) {
+            spawnTimer += Time.deltaTime;
+            if (spawnTimer > newEnemySpawnTime) {
+                spawnTimer -= newEnemySpawnTime;
+                SpawnEnemyRandomly();
+            }
         }
     }
 
@@ -35,13 +36,7 @@ public class EnemySpawner : MonoBehaviour
         var enemy = Instantiate(enemyPrefab);
         enemy.transform.position = pos;
         enemy.SetTarget(playerTransform);
-        var healthComponent = enemy.GetUnitComponent<HealthComponent>();
-        healthComponent.EventDeath += OnEnemyDie;
-        enemies.Add(enemy);
-    }
-
-    private void OnEnemyDie(Unit unit)
-    {
-        enemies.Remove(unit);
+        
+        EnemyManager.Instance.RegisterEnemy(enemy);
     }
 }
