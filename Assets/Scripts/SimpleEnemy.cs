@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class SimpleEnemy : Unit
 {
-    private Transform target;
+    private Transform targetTransform;
+    private Unit target;
+    private HealthComponent targetHealthComponent;
     private IMovement movementComponent;
+    private WeaponComponent weaponComponent;
     private float checkTime = 0.5f;
     private float checkTimer = 0.0f;
 
@@ -12,23 +15,31 @@ public class SimpleEnemy : Unit
         base.Start();
         
         movementComponent = GetMovement();
+        weaponComponent = GetComponent<WeaponComponent>();
     }
     
-    public void SetTarget(Transform target)
+    public void SetTarget(Unit target)
     {
         this.target = target;
+        targetTransform = target.transform;
+
+        targetHealthComponent = target.GetComponent<HealthComponent>();
+        targetHealthComponent.EventDeath += OnDie;
     }
-    
+
+    private void OnDie(Unit unit)
+    {
+        target = null;
+        targetHealthComponent.EventDeath -= OnDie;
+    }
+
     private void Update()
     {
-        movementComponent?.Move(target.position - transform.position);
-        // if (checkTimer > checkTime) {
-        //     checkTimer -= checkTime;
-        //     // Update direction
-        //     
-        // }
-        // else {
-        //     checkTimer += Time.deltaTime;
-        // }
+        if (target == null) {
+            return;
+        }
+        
+        movementComponent?.Move(targetTransform.position - transform.position);
+        weaponComponent.TryFire(targetTransform.position);
     }
 }

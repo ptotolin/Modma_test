@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponName: Projectile Gun
   Damage: 5
-  FireRate: 2
-  Range: 10
+  FireRate: 1
+  Range: 5
   ReloadTime: 2
   MaxAmmo: 100000
   ProjectilePrefab: {fileID: 7399038658667863785, guid: 88ce97c40c04d4f8f9764a0d043c374d, type: 3}

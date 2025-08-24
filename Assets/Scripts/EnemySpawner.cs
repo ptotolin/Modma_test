@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
@@ -15,7 +16,7 @@ public class EnemySpawner : MonoBehaviour
     
     [SerializeField] private int maxEnemies = 50;
     [SerializeField] private Rect generationArea;
-    [SerializeField] private Transform playerTransform;
+    [SerializeField] private Player player;
     [SerializeField] private SimpleEnemy enemyPrefab;
     [SerializeField] private float newEnemySpawnTime = 20;
     
@@ -43,7 +44,7 @@ public class EnemySpawner : MonoBehaviour
     {
         var enemy = Instantiate(enemyPrefab);
         enemy.transform.position = GenerateRandomPointOutsideBounds();;
-        enemy.SetTarget(playerTransform);
+        enemy.SetTarget(player);
         
         EnemyManager.Instance.RegisterEnemy(enemy);
     }
