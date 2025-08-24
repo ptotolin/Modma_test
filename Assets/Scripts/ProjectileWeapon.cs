@@ -42,14 +42,18 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
         lastFireTime = 0f;
     }
     
-    public bool CanFire()
+    public bool CanFire(Vector2 targetPos)
     {
-        return HasAmmo && !isReloading && Time.time >= lastFireTime + (1f / config.FireRate);
+        var dist = Vector2.Distance(transform.position, targetPos);
+        return HasAmmo && 
+               !isReloading && 
+               Vector2.Distance(transform.position, targetPos) < config.Range && 
+               Time.time >= lastFireTime + (1f / config.FireRate);
     }
     
-    public void Fire(Vector3 firePoint, Vector2 direction, Unit owner)
+    public void Fire(Vector2 firePoint, Vector2 targetPos, Unit owner)
     {
-        if (!CanFire()) return;
+        if (!CanFire(targetPos)) return;
         
         lastFireTime = Time.time;
         
@@ -61,6 +65,7 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
         
         // Create projectile
         if (config.ProjectilePrefab != null) {
+            var direction = (targetPos - firePoint).normalized;
             SpawnProjectile(firePoint, direction, owner);
         }
         

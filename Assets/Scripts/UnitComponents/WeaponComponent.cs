@@ -22,7 +22,6 @@ public class WeaponComponent : MonoBehaviour, IUnitComponent
     // Properties (forwarded from weapon)
     public IWeapon CurrentWeapon => currentWeapon;
     public bool HasWeapon => currentWeapon != null;
-    public bool CanFire => HasWeapon && currentWeapon.CanFire();
     public float Damage => HasWeapon ? currentWeapon.Damage : 0f;
     public float FireRate => HasWeapon ? currentWeapon.FireRate : 0f;
     public float Range => HasWeapon ? currentWeapon.Range : 0f;
@@ -58,11 +57,14 @@ public class WeaponComponent : MonoBehaviour, IUnitComponent
         }
     }
     
-    public bool TryFire(Vector2 direction)
+    public bool TryFire(Vector2 targetPos)
     {
-        if (!CanFire) return false;
+        if ((HasWeapon && currentWeapon.CanFire(targetPos)) == false) 
+            return false;
         
-        currentWeapon.Fire(firePoint.position, direction, unit);
+        currentWeapon.Fire(firePoint.position, targetPos, unit);
+
+        var direction = (targetPos - (Vector2)firePoint.position).normalized;
         EventAim?.Invoke(direction);
         
         return true;

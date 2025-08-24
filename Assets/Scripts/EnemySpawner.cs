@@ -1,8 +1,18 @@
+using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
+    enum Sides
+    {
+        Left,
+        Right,
+        Top,
+        Bottom, 
+        SidesMax
+    };
+    
     [SerializeField] private int maxEnemies = 50;
     [SerializeField] private Rect generationArea;
     [SerializeField] private Transform playerTransform;
@@ -10,10 +20,12 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float newEnemySpawnTime = 20;
     
     private float spawnTimer = 0.0f;
+    private WorldBounds worldBounds;
 
     private void Start()
     {
-        SpawnEnemyRandomly();
+        worldBounds = WorldBounds.Instance;
+        SpawnEnemy();
     }
 
     private void Update()
@@ -22,21 +34,40 @@ public class EnemySpawner : MonoBehaviour
             spawnTimer += Time.deltaTime;
             if (spawnTimer > newEnemySpawnTime) {
                 spawnTimer -= newEnemySpawnTime;
-                SpawnEnemyRandomly();
+                SpawnEnemy();
             }
         }
     }
 
-    private void SpawnEnemyRandomly()
+    private void SpawnEnemy()
     {
-        Vector2 pos = new Vector2(
-            Random.Range(generationArea.xMin, generationArea.xMax),
-            Random.Range(generationArea.yMin, generationArea.yMax));
-        
         var enemy = Instantiate(enemyPrefab);
-        enemy.transform.position = pos;
+        enemy.transform.position = GenerateRandomPointOutsideBounds();;
         enemy.SetTarget(playerTransform);
         
         EnemyManager.Instance.RegisterEnemy(enemy);
+    }
+
+    private Vector2 GenerateRandomPointOutsideBounds()
+    {
+        var side = (Sides)Random.Range(0, (int)Sides.SidesMax);
+        switch (side) {
+            case Sides.Left:
+                return new Vector2(worldBounds.MinBounds.x,
+                    Random.Range(worldBounds.MinBounds.y, worldBounds.MaxBounds.y));
+                
+            case Sides.Right:
+                return new Vector2(worldBounds.MaxBounds.x,
+                    Random.Range(worldBounds.MinBounds.y, worldBounds.MaxBounds.y));
+            
+            case Sides.Top:
+                return new Vector2(Random.Range(worldBounds.MinBounds.x, worldBounds.MaxBounds.x), worldBounds.MaxBounds.y);
+            
+            case Sides.Bottom:
+                return new Vector2(Random.Range(worldBounds.MinBounds.x, worldBounds.MaxBounds.x), worldBounds.MinBounds.y);
+            
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }

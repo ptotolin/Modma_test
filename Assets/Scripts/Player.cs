@@ -36,7 +36,7 @@ public class Player : Unit
         }
 
         if (currentTarget != null) {
-            weaponComponent.TryFire((currentTarget.transform.position - this.transform.position).normalized);
+            weaponComponent.TryFire(currentTarget.transform.position);
         }
         
         prevIdling = playerController.Idling;
