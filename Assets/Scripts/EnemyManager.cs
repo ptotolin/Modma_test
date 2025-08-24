@@ -48,7 +48,14 @@ public class EnemyManager : MonoBehaviour
             activeEnemies.Remove(enemy);
             EventEnemyDestroyed?.Invoke(enemy);
             
-            Debug.Log($"Enemy destroyed: {enemy.Name}. Total enemies: {activeEnemies.Count}");
+            // Return to pool instead of destroying
+            var pooledObject = enemy.GetComponent<PooledObject>();
+            if (pooledObject != null) {
+                pooledObject.Despawn();
+            }
+            
+            Debug.Log($"Enemy destroyed and returned to pool: {enemy.Name}. Total enemies: {activeEnemies.Count}");
+
         }
     }
     

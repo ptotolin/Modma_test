@@ -81,10 +81,9 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
     
     private void SpawnProjectile(Vector3 firePoint, Vector2 direction, Unit owner)
     {
-        var projectileObject = Instantiate(config.ProjectilePrefab, firePoint, Quaternion.identity);
+        var projectile = ObjectPool.Instance.Spawn<Projectile>(config.ProjectilePrefab, firePoint, Quaternion.identity);
         
         // Setup projectile
-        var projectile = projectileObject.GetComponent<Projectile>();
         if (projectile != null) {
             projectile.SetDamage(config.Damage);
             projectile.SetSpeed(config.ProjectileSpeed);

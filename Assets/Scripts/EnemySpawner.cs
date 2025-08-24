@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
@@ -22,15 +21,26 @@ public class EnemySpawner : MonoBehaviour
     
     private float spawnTimer = 0.0f;
     private WorldBounds worldBounds;
+    private bool playerDied;
 
     private void Start()
     {
         worldBounds = WorldBounds.Instance;
         SpawnEnemy();
+        player.GetComponent<HealthComponent>().EventDeath += OnDie;
+    }
+
+    private void OnDie(Unit playerUnit)
+    {
+        playerDied = true;
     }
 
     private void Update()
     {
+        if (playerDied) {
+            return;
+        }
+        
         if (EnemyManager.Instance.EnemyCount < maxEnemies) {
             spawnTimer += Time.deltaTime;
             if (spawnTimer > newEnemySpawnTime) {
@@ -42,11 +52,11 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        var enemy = Instantiate(enemyPrefab);
-        enemy.transform.position = GenerateRandomPointOutsideBounds();;
-        enemy.SetTarget(player);
-        
-        EnemyManager.Instance.RegisterEnemy(enemy);
+        var enemy = ObjectPool.Instance.Spawn<SimpleEnemy>(enemyPrefab.gameObject, GenerateRandomPointOutsideBounds());
+        if (enemy != null) {
+            enemy.SetTarget(player);
+            EnemyManager.Instance.RegisterEnemy(enemy);
+        }
     }
 
     private Vector2 GenerateRandomPointOutsideBounds()

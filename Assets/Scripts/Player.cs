@@ -62,17 +62,17 @@ public class Player : Unit
     }
 
 
-    private void OnGUI()
-    {
-        if (rb != null) {
-            style = new GUIStyle();
-            style.fontSize = 40;
-            
-            var sb = new StringBuilder();
-            sb.AppendLine($"Player speed: {rb.velocity.magnitude}");
-            sb.AppendLine($"max speed: {movement.MaxSpeed}");
-            var str = sb.ToString();
-            GUI.Label(new Rect(10, 10, 200, 30), $"Player speed = {str}", style);
-        }
-    }
+    // private void OnGUI()
+    // {
+    //     if (rb != null) {
+    //         style = new GUIStyle();
+    //         style.fontSize = 40;
+    //         
+    //         var sb = new StringBuilder();
+    //         sb.AppendLine($"Player speed: {rb.velocity.magnitude}");
+    //         sb.AppendLine($"max speed: {movement.MaxSpeed}");
+    //         var str = sb.ToString();
+    //         GUI.Label(new Rect(10, 10, 200, 30), $"Player speed = {str}", style);
+    //     }
+    // }
 }

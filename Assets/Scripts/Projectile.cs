@@ -20,6 +20,7 @@ public class Projectile : MonoBehaviour
     
     private Unit owner;
     private bool hasHit = false;
+    private PooledObject pooledObject;
     
     // Properties
     public float Damage => damage;
@@ -29,8 +30,27 @@ public class Projectile : MonoBehaviour
     
     private void Start()
     {
-        // Auto-destroy after lifetime to prevent memory leaks
-        Destroy(gameObject, lifetime);
+        pooledObject = GetComponent<PooledObject>();
+        if (pooledObject != null) {
+            pooledObject.EventSpawned += OnSpawned;
+            pooledObject.EventDespawned += OnDespawned;
+        }
+    }
+    
+    private void OnSpawned()
+    {
+        // Reset projectile state when spawned from pool
+        hasHit = false;
+        owner = null;
+        
+        // Start lifetime timer
+        Invoke(nameof(DestroyProjectile), lifetime);
+    }
+    
+    private void OnDespawned()
+    {
+        // Cancel lifetime timer when returned to pool
+        CancelInvoke(nameof(DestroyProjectile));
     }
     
     public void SetDamage(float newDamage)
@@ -104,14 +124,6 @@ public class Projectile : MonoBehaviour
     
     private bool IsValidTarget(Collider2D other)
     {
-        // Получаем числовой индекс слоя
-        int layerIndex = other.gameObject.layer;
-
-        // Конвертируем индекс в название
-        string layerName = LayerMask.LayerToName(layerIndex);
-        
-        Debug.Log($"object: {other.gameObject.name}, layerName: {layerName}");
-        
         // Check if other is on target layers
         return (targetLayers.value & (1 << other.gameObject.layer)) != 0;
     }
@@ -144,7 +156,7 @@ public class Projectile : MonoBehaviour
     private void DestroyProjectile()
     {
         EventDestroyed?.Invoke();
-        Destroy(gameObject);
+        ObjectPool.Instance.Despawn(this.gameObject);
     }
     
     // Public method to manually destroy projectile
@@ -160,5 +172,13 @@ public class Projectile : MonoBehaviour
         if (owner != null && target == owner) return false;
         
         return IsValidTarget(target.GetComponent<Collider2D>());
+    }
+    
+    private void OnDestroy()
+    {
+        if (pooledObject != null) {
+            pooledObject.EventSpawned -= OnSpawned;
+            pooledObject.EventDespawned -= OnDespawned;
+        }
     }
 }

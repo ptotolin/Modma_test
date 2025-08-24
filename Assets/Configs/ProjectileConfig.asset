@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ProjectileConfig
   m_EditorClassIdentifier: 
   WeaponName: Projectile Gun
-  Damage: 5
-  FireRate: 1
+  Damage: 1
+  FireRate: 3
   Range: 5
   ReloadTime: 2
   MaxAmmo: 100000
