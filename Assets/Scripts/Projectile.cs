@@ -159,21 +159,6 @@ public class Projectile : MonoBehaviour
         ObjectPool.Instance.Despawn(this.gameObject);
     }
     
-    // Public method to manually destroy projectile
-    public void ForceDestroy()
-    {
-        DestroyProjectile();
-    }
-    
-    // Method to check if projectile can hit specific target
-    public bool CanHitTarget(Unit target)
-    {
-        if (hasHit) return false;
-        if (owner != null && target == owner) return false;
-        
-        return IsValidTarget(target.GetComponent<Collider2D>());
-    }
-    
     private void OnDestroy()
     {
         if (pooledObject != null) {

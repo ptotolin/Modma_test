@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using System;
 
@@ -78,52 +77,5 @@ public class EnemyManager : MonoBehaviour
         }
         
         return closest;
-    }
-    
-    // Find closest enemy to transform
-    public Unit GetClosestEnemy(Transform transform)
-    {
-        return GetClosestEnemy(transform.position);
-    }
-    
-    // Get all enemies within range
-    public List<Unit> GetEnemiesInRange(Vector3 position, float range)
-    {
-        return activeEnemies
-            .Where(enemy => enemy != null && enemy.IsAlive)
-            .Where(enemy => Vector3.Distance(position, enemy.Position) <= range)
-            .ToList();
-    }
-    
-    // Get enemies sorted by distance
-    public List<Unit> GetEnemiesSortedByDistance(Vector3 position)
-    {
-        return activeEnemies
-            .Where(enemy => enemy != null && enemy.IsAlive)
-            .OrderBy(enemy => Vector3.Distance(position, enemy.Position))
-            .ToList();
-    }
-    
-    // Get random enemy
-    public Unit GetRandomEnemy()
-    {
-        if (activeEnemies.Count == 0) return null;
-        
-        var aliveEnemies = activeEnemies.Where(e => e != null && e.IsAlive).ToList();
-        if (aliveEnemies.Count == 0) return null;
-        
-        return aliveEnemies[UnityEngine.Random.Range(0, aliveEnemies.Count)];
-    }
-    
-    // Clear all enemies (for level reset, etc.)
-    public void ClearAllEnemies()
-    {
-        foreach (var enemy in activeEnemies.ToList()) {
-            if (enemy != null) {
-                enemy.EventDestroyed -= OnEnemyDestroyed;
-                Destroy(enemy.gameObject);
-            }
-        }
-        activeEnemies.Clear();
     }
 }
