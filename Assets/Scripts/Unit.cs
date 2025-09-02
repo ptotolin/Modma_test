@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour
 {
     // Events
     public event Action<Unit> EventDestroyed;
@@ -15,6 +15,9 @@ public class Unit : MonoBehaviour
     // Components cache
     private Dictionary<System.Type, IUnitComponent> components = new Dictionary<System.Type, IUnitComponent>();
     private List<IUnitComponent> allComponents = new List<IUnitComponent>();
+    
+    // Presenter
+    private UnitPresenter unitPresenter;
     
     // Properties
     public string Name => unitName;
@@ -34,9 +37,15 @@ public class Unit : MonoBehaviour
     
     protected virtual void Start()
     {
+        unitPresenter = new UnitPresenter(this);
         EventInitialized?.Invoke(this);
     }
-    
+
+    private void OnDestroy()
+    {
+        unitPresenter.Dispose();
+    }
+
     private void InitializeComponents()
     {
         // Find all unit components on this GameObject and cache them
@@ -98,6 +107,6 @@ public class Unit : MonoBehaviour
         EventDestroyed?.Invoke(this);
         
         // Destroy GameObject after a frame to allow cleanup
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 }

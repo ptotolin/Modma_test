@@ -1,4 +1,3 @@
-using System.Text;
 using UnityEngine;
 
 [RequireComponent(typeof(WeaponComponent))]
@@ -6,9 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 public class Player : Unit
 {
-    private Rigidbody2D rb;
+    [SerializeField] private Animation anim;
+    [SerializeField] private AnimationClip fireAnimationClip;
+    
     private GUIStyle style;
-    private IMovement movement;
     private Unit currentTarget;
     private bool prevIdling;
     private WeaponComponent weaponComponent;
@@ -19,8 +19,6 @@ public class Player : Unit
     {
         base.Start();
         
-        rb = GetComponent<Rigidbody2D>();
-        movement = GetComponent<IMovement>();
         playerController = GetComponent<PlayerController>();
         weaponComponent = GetComponent<WeaponComponent>();
         prevIdling = playerController.Idling;
@@ -36,10 +34,19 @@ public class Player : Unit
         }
 
         if (currentTarget != null) {
-            weaponComponent.TryFire(currentTarget.transform.position);
+            if (weaponComponent.TryFire(currentTarget.transform.position)) {
+                TryPlayFireAnimation();
+            }
         }
         
         prevIdling = playerController.Idling;
+    }
+
+    private void TryPlayFireAnimation()
+    {
+        if (anim != null && fireAnimationClip != null) {
+            anim.Play(fireAnimationClip.name);
+        }
     }
 
     private void SetNewTarget()

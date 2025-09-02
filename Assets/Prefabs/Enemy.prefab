@@ -12,8 +12,10 @@ GameObject:
   - component: {fileID: 4797180918170250148}
   - component: {fileID: 3501546182436520260}
   - component: {fileID: 9066316854859551554}
-  - component: {fileID: 6137230399863820113}
   - component: {fileID: 5655339034844554570}
+  - component: {fileID: 7902204566571432367}
+  - component: {fileID: 6137230399863820113}
+  - component: {fileID: 2933707112427836502}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Enemy
@@ -83,6 +85,35 @@ MonoBehaviour:
   acceleration: 2
   drag: 20
   forceMode: 0
+--- !u!114 &5655339034844554570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036488596647226649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 867ecfa11d36f4d17985e63ad8ff8b29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 7648827522746964115}
+  weaponBehaviour: {fileID: 6465042430354410028}
+--- !u!114 &7902204566571432367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036488596647226649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f08f750accab4b39b14159834c684c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 2933707112427836502}
+  hitAnimClip: {fileID: 7400000, guid: 347d3cebba0174849a39920e8fff2ea4, type: 2}
+  deathAnimClip: {fileID: 0}
 --- !u!50 &6137230399863820113
 Rigidbody2D:
   serializedVersion: 4
@@ -110,20 +141,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &5655339034844554570
-MonoBehaviour:
+--- !u!111 &2933707112427836502
+Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2036488596647226649}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 867ecfa11d36f4d17985e63ad8ff8b29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 7648827522746964115}
-  weaponBehaviour: {fileID: 6465042430354410028}
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 347d3cebba0174849a39920e8fff2ea4, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &5070088693987073241
 GameObject:
   m_ObjectHideFlags: 0
