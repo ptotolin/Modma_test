@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class NonPhysicsMovementComponent : MonoBehaviour, IUnitComponent, IMovement
@@ -25,8 +26,15 @@ public class NonPhysicsMovementComponent : MonoBehaviour, IUnitComponent, IMovem
     public void Initialize(Unit unit)
     {
         this.unit = unit;
+        Reset();
     }
-    
+
+    public void Reset()
+    {
+        currentVelocity = Vector2.zero;
+        inputDirection = Vector2.zero;
+    }
+
     private void Update()
     {
         var dt = Time.deltaTime;
@@ -41,7 +49,7 @@ public class NonPhysicsMovementComponent : MonoBehaviour, IUnitComponent, IMovem
     
     private void UpdateMovement(float dt)
     {
-        Vector2 targetVelocity = inputDirection * maxSpeed;
+        var targetVelocity = inputDirection * maxSpeed;
         
         if (smoothMovement) {
             // Smooth movement using SmoothDamp

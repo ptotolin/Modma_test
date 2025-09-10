@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
@@ -31,7 +30,6 @@ public class ObjectPool : MonoBehaviour
     {
         string poolName = prefab.name;
         
-        // Создаем пул если его нет
         if (!pools.ContainsKey(poolName)) {
             CreatePool(poolName, prefab);
         }
@@ -82,11 +80,13 @@ public class ObjectPool : MonoBehaviour
         return pool.Dequeue();
     }
     
+    static int counter = 0;
     private void CreateNewObject(string poolName)
     {
         if (!prefabMap.ContainsKey(poolName)) return;
         
         GameObject obj = Instantiate(prefabMap[poolName], transform);
+        obj.name = (++counter).ToString();
         obj.SetActive(false);
         
         // Add pool identifier
@@ -138,19 +138,19 @@ public class ObjectPool : MonoBehaviour
         return pools.ContainsKey(poolName);
     }
 
-    private void OnGUI()
-    {
-        var style = new GUIStyle {
-            fontSize = 40
-        };
-
-        var sb = new StringBuilder();
-        sb.AppendLine($"pools count: {pools.Count}");
-        foreach (var pool in pools) {
-            sb.AppendLine($"pool[{pool.Key}].Count = {pool.Value.Count}");
-        }
-
-        var str = sb.ToString();
-        GUI.Label(new Rect(10, 10, 200, 30), $"{str}", style);
-    }
+    // private void OnGUI()
+    // {
+    //     var style = new GUIStyle {
+    //         fontSize = 40
+    //     };
+    //
+    //     var sb = new StringBuilder();
+    //     sb.AppendLine($"pools count: {pools.Count}");
+    //     foreach (var pool in pools) {
+    //         sb.AppendLine($"pool[{pool.Key}].Count = {pool.Value.Count}");
+    //     }
+    //
+    //     var str = sb.ToString();
+    //     GUI.Label(new Rect(10, 10, 200, 30), $"{str}", style);
+    // }
 }

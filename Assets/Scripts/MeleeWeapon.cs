@@ -30,15 +30,29 @@ public class MeleeWeapon : MonoBehaviour, IWeapon
     public bool HasAmmo => true;
     public bool IsReloading => false;
     
-    public bool CanFire(Vector2 targetPos)
+    public bool CanFire(Vector2 targetPos, out int fireFailureReason)
     {
-        float distance = Vector2.Distance(transform.position, targetPos);
-        return distance <= range && Time.time >= lastAttackTime + (1f / attackRate);
+        fireFailureReason = (int)FireFailureReason.NoReason;
+        var distance = Vector2.SqrMagnitude((Vector2)transform.position - targetPos);
+        var inRange = distance <= range * range;
+        var inCooldown = Time.time < lastAttackTime + (1f / attackRate);
+        var result = inRange && !inCooldown;
+        if (!result) {
+            if (!inRange) {
+                fireFailureReason |= (int)FireFailureReason.OutOfRange;
+            }
+
+            if (inCooldown) {
+                fireFailureReason |= (int)FireFailureReason.OnCooldown;
+            }
+        }
+
+        return result;
     }
     
     public void Fire(Vector2 firePoint, Vector2 targetPos, Unit owner)
     {
-        if (!CanFire(targetPos)) return;
+        if (!CanFire(targetPos, out var fireFailureReason)) return;
         
         lastAttackTime = Time.time;
         this.owner = owner;
@@ -61,7 +75,7 @@ public class MeleeWeapon : MonoBehaviour, IWeapon
         var healthComponent = target.GetUnitComponent<HealthComponent>();
         if (healthComponent != null && healthComponent.IsAlive) {
             healthComponent.TakeDamage(damage);
-            Debug.Log($"Melee attack from {owner.Name} hit {target.Name} for {damage} damage");
+            //Debug.Log($"Melee attack from {owner.Name} hit {target.Name} for {damage} damage");
         }
     }
     

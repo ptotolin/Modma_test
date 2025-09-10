@@ -11,7 +11,8 @@ public class HealthComponent : MonoBehaviour, IUnitComponent
     
     [Header("Health Settings")]
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth;
+    
+    private float currentHealth;
     
     // Properties
     public float CurrentHealth => currentHealth;
@@ -28,11 +29,16 @@ public class HealthComponent : MonoBehaviour, IUnitComponent
         currentHealth = maxHealth;
     }
     
+    public void Reset()
+    {
+        currentHealth = maxHealth;
+    }
+    
     public void TakeDamage(float damage)
     {
         if (!IsAlive || damage <= 0f) return;
         
-        float previousHealth = currentHealth;
+        var previousHealth = currentHealth;
         currentHealth = Mathf.Max(0f, currentHealth - damage);
         
         EventDamageTaken?.Invoke(damage);
@@ -78,10 +84,6 @@ public class HealthComponent : MonoBehaviour, IUnitComponent
     private void Die()
     {
         EventDeath?.Invoke(unit);
-        
-        if (unit != null) {
-            unit.DestroyUnit();
-        }
     }
     
     public void OnDestroy()

@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 [RequireComponent(typeof(WeaponComponent))]
@@ -12,6 +13,7 @@ public class Player : Unit
     private Unit currentTarget;
     private bool prevIdling;
     private WeaponComponent weaponComponent;
+    private Rigidbody2D rb;
 
     private PlayerController playerController;
     
@@ -22,6 +24,31 @@ public class Player : Unit
         playerController = GetComponent<PlayerController>();
         weaponComponent = GetComponent<WeaponComponent>();
         prevIdling = playerController.Idling;
+        // Debug
+        rb = GetComponent<Rigidbody2D>();
+        DebugLogOnGUI.Instance.Initialize(40);
+        DebugLogOnGUI.Instance.WatchVariable("player speed", GetSpeed);
+        DebugLogOnGUI.Instance.WatchVariable("current target", GetCurrentTarget);
+    }
+
+    private void OnDestroy()
+    {
+        DebugLogOnGUI.Instance.UnwatchVariable("player speed");
+        DebugLogOnGUI.Instance.UnwatchVariable("current target");
+    }
+
+    private object GetSpeed()
+    {
+        if (rb != null) {
+            return rb.velocity.magnitude;
+        }
+
+        return null;
+    }
+
+    private object GetCurrentTarget()
+    {
+        return currentTarget;
     }
 
     private void Update()
@@ -34,8 +61,12 @@ public class Player : Unit
         }
 
         if (currentTarget != null) {
-            if (weaponComponent.TryFire(currentTarget.transform.position)) {
+            if (weaponComponent.TryFire(currentTarget.transform.position, out var fireFailureReason)) {
                 TryPlayFireAnimation();
+            } else if ((fireFailureReason & (int)FireFailureReason.NoReason) == 0) {
+                if ((fireFailureReason & (int)FireFailureReason.OutOfRange) != 0) {
+                    currentTarget = null;
+                }
             }
         }
         
@@ -52,14 +83,14 @@ public class Player : Unit
     private void SetNewTarget()
     {
         if (currentTarget != null) {
-            currentTarget.EventDestroyed -= OnTargetDestroyed;
+            currentTarget.GetUnitComponent<HealthComponent>().EventDeath -= OnTargetDestroyed;
         }
         
         // search for closest enemy
         currentTarget = EnemyManager.Instance.GetClosestEnemy(transform.position);
 
         if (currentTarget != null) {
-            currentTarget.EventDestroyed += OnTargetDestroyed;
+            currentTarget.GetUnitComponent<HealthComponent>().EventDeath += OnTargetDestroyed;
         }
     }
 
@@ -71,15 +102,14 @@ public class Player : Unit
 
     // private void OnGUI()
     // {
-    //     if (rb != null) {
-    //         style = new GUIStyle();
-    //         style.fontSize = 40;
-    //         
-    //         var sb = new StringBuilder();
-    //         sb.AppendLine($"Player speed: {rb.velocity.magnitude}");
-    //         sb.AppendLine($"max speed: {movement.MaxSpeed}");
-    //         var str = sb.ToString();
-    //         GUI.Label(new Rect(10, 10, 200, 30), $"Player speed = {str}", style);
-    //     }
+    //     style = new GUIStyle();
+    //     style.fontSize = 40;
+    //
+    //     var sb = new StringBuilder();
+    //     var currentTargetStr = currentTarget == null ? "null" : currentTarget.gameObject.name;
+    //     sb.AppendLine($"current target: {currentTargetStr}");
+    //     sb.AppendLine($"current speed: {rb.velocity}");
+    //     var str = sb.ToString();
+    //     GUI.Label(new Rect(10, 150, 200, 30), $"{str}", style);
     // }
 }

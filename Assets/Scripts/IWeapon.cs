@@ -23,7 +23,7 @@ public interface IWeapon
     bool IsReloading { get; }
     
     // Weapon actions
-    bool CanFire(Vector2 targetPos);
+    bool CanFire(Vector2 targetPos, out int fireFailureReason);
     void Fire(Vector2 firePoint, Vector2 targetPos, Unit owner);
     void Reload();
 }

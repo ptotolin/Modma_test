@@ -81,9 +81,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d977644f7fca648e38a4a9e9992b6508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 2
-  acceleration: 2
-  drag: 20
+  maxSpeed: 10
+  acceleration: 8
+  drag: 5
   forceMode: 0
 --- !u!114 &5655339034844554570
 MonoBehaviour:

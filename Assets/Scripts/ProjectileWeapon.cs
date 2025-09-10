@@ -42,18 +42,42 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
         lastFireTime = 0f;
     }
     
-    public bool CanFire(Vector2 targetPos)
+    public bool CanFire(Vector2 targetPos, out int fireFailureReason)
     {
-        var dist = Vector2.Distance(transform.position, targetPos);
-        return HasAmmo && 
-               !isReloading && 
-               Vector2.Distance(transform.position, targetPos) < config.Range && 
-               Time.time >= lastFireTime + (1f / config.FireRate);
+        fireFailureReason = (int)FireFailureReason.NoReason;
+        var inRange = Vector2.Distance(transform.position, targetPos) < config.Range;
+        var inCooldown = Time.time < lastFireTime + (1f / config.FireRate);
+        var result = HasAmmo &&
+                      !isReloading &&
+                      inRange && 
+                      !inCooldown;
+        
+        if (!result) {
+            if (!HasAmmo) {
+                fireFailureReason |= (int)FireFailureReason.NoAmmo;
+            }
+
+            if (isReloading) {
+                fireFailureReason |= (int)FireFailureReason.Reloading;
+            }
+
+            if (!inRange) {
+                fireFailureReason |= (int)FireFailureReason.OutOfRange;
+            }
+
+            if (inCooldown) {
+                fireFailureReason |= (int)FireFailureReason.OnCooldown;
+            }
+        }
+
+        return result;
     }
     
     public void Fire(Vector2 firePoint, Vector2 targetPos, Unit owner)
     {
-        if (!CanFire(targetPos)) return;
+        if (!CanFire(targetPos, out var failureReason)) {
+            return;
+        }
         
         lastFireTime = Time.time;
         

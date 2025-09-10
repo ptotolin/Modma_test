@@ -57,6 +57,9 @@ public class EnemySpawner : MonoBehaviour
             enemy.SetTarget(player);
             EnemyManager.Instance.RegisterEnemy(enemy);
         }
+        else {
+            Debug.LogError($"Can't instantiate enemy for some reason");
+        }
     }
 
     private Vector2 GenerateRandomPointOutsideBounds()

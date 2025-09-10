@@ -134,7 +134,7 @@ public class Projectile : MonoBehaviour
         if (targetHealth != null && targetHealth.IsAlive) {
             targetHealth.TakeDamage(damage);
             
-            Debug.Log($"Projectile from {(owner != null ? owner.Name : "Unknown")} hit {target.Name} for {damage} damage");
+            //Debug.Log($"Projectile from {(owner != null ? owner.Name : "Unknown")} hit {target.Name} for {damage} damage");
         }
     }
     

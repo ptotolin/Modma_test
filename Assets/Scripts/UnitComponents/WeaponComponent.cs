@@ -40,12 +40,24 @@ public class WeaponComponent : MonoBehaviour, IUnitComponent
             SetWeapon(weaponBehaviour as IWeapon);
         }
     }
-    
+
+    public void Reset()
+    {
+        if (weaponBehaviour != null) {
+            SetWeapon(weaponBehaviour as IWeapon);
+        }
+    }
+
     public void SetWeapon(IWeapon weapon)
     {
+        if (currentWeapon == weapon) {
+            return;
+        }
+        
         // Unsubscribe from old weapon
         if (currentWeapon != null) {
             UnsubscribeFromWeapon(currentWeapon);
+            Destroy((currentWeapon as MonoBehaviour).gameObject);
         }
         
         // Set new weapon
@@ -57,9 +69,11 @@ public class WeaponComponent : MonoBehaviour, IUnitComponent
         }
     }
     
-    public bool TryFire(Vector2 targetPos)
+    public bool TryFire(Vector2 targetPos, out int fireFailureReason)
     {
-        if ((HasWeapon && currentWeapon.CanFire(targetPos)) == false) 
+        fireFailureReason = (int)FireFailureReason.NoReason;
+        
+        if ((HasWeapon && currentWeapon.CanFire(targetPos, out fireFailureReason)) == false) 
             return false;
         
         currentWeapon.Fire(firePoint.position, targetPos, unit);

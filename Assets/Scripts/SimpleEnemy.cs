@@ -30,7 +30,17 @@ public class SimpleEnemy : Unit
     private void OnDie(Unit unit)
     {
         target = null;
+        targetTransform = null;
         targetHealthComponent.EventDeath -= OnDie;
+    }
+
+    private void FixedUpdate()
+    {
+        if (movementComponent == null || targetTransform == null) {
+            return;
+        }
+        
+        movementComponent?.Move(targetTransform.position - transform.position);
     }
 
     private void Update()
@@ -38,8 +48,7 @@ public class SimpleEnemy : Unit
         if (target == null) {
             return;
         }
-        
-        movementComponent?.Move(targetTransform.position - transform.position);
-        weaponComponent.TryFire(targetTransform.position);
+
+        weaponComponent.TryFire(targetTransform.position, out var fireFailureReason);
     }
 }

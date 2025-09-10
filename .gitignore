@@ -97,3 +97,12 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Unity Burst temporary/debug files
+[Bb]urstDebugInformation_DoNotShip/
+[Bb]urstCache/
+[Bb]urst/
+*.burst
+*.burstdebug
+*.burstinfo
+tempburstlibs/

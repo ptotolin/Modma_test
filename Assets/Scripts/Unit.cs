@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour, IResettable
 {
     // Events
-    public event Action<Unit> EventDestroyed;
     public event Action<Unit> EventInitialized;
     
     [Header("Unit Info")]
@@ -45,22 +44,12 @@ public abstract class Unit : MonoBehaviour
     {
         unitPresenter.Dispose();
     }
-
-    private void InitializeComponents()
+    
+    public virtual void Reset()
     {
-        // Find all unit components on this GameObject and cache them
-        IUnitComponent[] unitComponents = GetComponents<IUnitComponent>();
-        
+        IResettable[] unitComponents = GetComponents<IUnitComponent>();
         foreach (var component in unitComponents) {
-            System.Type componentType = component.GetType();
-            
-            if (!components.ContainsKey(componentType)) {
-                components[componentType] = component;
-                allComponents.Add(component);
-                
-                // Initialize component
-                component.Initialize(this);
-            }
+            component.Reset();
         }
     }
     
@@ -82,7 +71,6 @@ public abstract class Unit : MonoBehaviour
     // Get movement component (works with both physics and non-physics)
     public IMovement GetMovement()
     {
-        // Try to find any component that implements IMovement
         foreach (var component in allComponents) {
             if (component is IMovement movement) {
                 return movement;
@@ -91,22 +79,25 @@ public abstract class Unit : MonoBehaviour
         return null;
     }
     
-    // Check if unit can move
     public bool CanMove()
     {
         return GetMovement() != null && IsAlive;
     }
     
-    // Unit destruction
-    public void DestroyUnit()
+    private void InitializeComponents()
     {
-        if (!IsAlive) return;
+        // Find all unit components on this GameObject and cache them
+        IUnitComponent[] unitComponents = GetComponents<IUnitComponent>();
         
-        IsAlive = false;
-        
-        EventDestroyed?.Invoke(this);
-        
-        // Destroy GameObject after a frame to allow cleanup
-        // Destroy(gameObject);
+        foreach (var component in unitComponents) {
+            System.Type componentType = component.GetType();
+            
+            if (!components.ContainsKey(componentType)) {
+                components[componentType] = component;
+                allComponents.Add(component);
+                
+                component.Initialize(this);
+            }
+        }
     }
 }

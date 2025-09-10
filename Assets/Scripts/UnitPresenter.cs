@@ -41,7 +41,5 @@ public class UnitPresenter : IDisposable
         foreach (var resettable in resettables) {
             resettable.Reset();
         }
-        
-        ObjectPool.Instance.Despawn(unit.gameObject);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class EnemyManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
     // Register enemy when spawned
     public void RegisterEnemy(Unit enemy)
     {
@@ -33,10 +34,12 @@ public class EnemyManager : MonoBehaviour
             activeEnemies.Add(enemy);
             EventEnemySpawned?.Invoke(enemy);
             
-            // Subscribe to enemy destruction
-            enemy.EventDestroyed += OnEnemyDestroyed;
+            var healthComponent = enemy.GetUnitComponent<HealthComponent>();
+            if (healthComponent != null) {
+                healthComponent.EventDeath += OnEnemyDestroyed;
+            }
             
-            Debug.Log($"Enemy registered: {enemy.Name}. Total enemies: {activeEnemies.Count}");
+            Debug.Log($"<color=green>Enemy spawned: {enemy.gameObject.name}. Total enemies: {activeEnemies.Count}</color>");
         }
     }
     
@@ -52,9 +55,16 @@ public class EnemyManager : MonoBehaviour
             if (pooledObject != null) {
                 pooledObject.Despawn();
             }
-            
-            Debug.Log($"Enemy destroyed and returned to pool: {enemy.Name}. Total enemies: {activeEnemies.Count}");
+            else {
+                Debug.Log($"The object '{enemy.gameObject.name}' is not a poolable object. Destroying...");
+                Destroy(enemy.gameObject);
+            }
 
+            enemy.GetUnitComponent<HealthComponent>().EventDeath -= OnEnemyDestroyed;
+            Debug.Log($"<color=red>Enemy destroyed and returned to pool: {enemy.gameObject.name}. Total enemies: {activeEnemies.Count}</color>");
+        }
+        else {
+            Debug.LogError($"Tried to destroy enemy which is not in activeEnemies list");
         }
     }
     
@@ -64,12 +74,14 @@ public class EnemyManager : MonoBehaviour
         if (activeEnemies.Count == 0) return null;
         
         Unit closest = null;
-        float closestDistance = float.MaxValue;
-        
-        foreach (var enemy in activeEnemies) {
-            if (enemy == null || !enemy.IsAlive) continue;
+        var closestDistance = float.MaxValue;
+        var possibleTargets = activeEnemies.Where(t => t.GetUnitComponent<HealthComponent>() != null);
+        foreach (var enemy in possibleTargets) {
+            if (enemy == null || !enemy.GetUnitComponent<HealthComponent>().IsAlive) {
+                continue;
+            }
             
-            float distance = Vector3.Distance(position, enemy.Position);
+            var distance = Vector3.Distance(position, enemy.Position);
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closest = enemy;

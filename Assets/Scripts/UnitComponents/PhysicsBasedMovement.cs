@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PhysicsBasedMovement : MonoBehaviour, IUnitComponent, IMovement
@@ -13,6 +14,7 @@ public class PhysicsBasedMovement : MonoBehaviour, IUnitComponent, IMovement
     private Unit unit;
     private Rigidbody2D rb;
     private Vector2 inputDirection;
+    private float currentMaxSpeed;
     
     // Properties
     public float MaxSpeed => maxSpeed;
@@ -34,6 +36,15 @@ public class PhysicsBasedMovement : MonoBehaviour, IUnitComponent, IMovement
         rb.gravityScale = 0f;
         rb.drag = drag;
         rb.freezeRotation = true;
+        
+        Reset();
+    }
+
+    public void Reset()
+    {
+        currentMaxSpeed = maxSpeed;
+        inputDirection = Vector2.zero;
+        rb.velocity = Vector2.zero;
     }
 
     public void Move(Vector2 direction)
@@ -46,8 +57,8 @@ public class PhysicsBasedMovement : MonoBehaviour, IUnitComponent, IMovement
         rb.AddForce(force, forceMode);
         
         // Clamp velocity
-        if (rb.velocity.magnitude > maxSpeed) {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+        if (rb.velocity.magnitude > currentMaxSpeed) {
+            rb.velocity = rb.velocity.normalized * currentMaxSpeed;
         }
     }
     
@@ -74,6 +85,6 @@ public class PhysicsBasedMovement : MonoBehaviour, IUnitComponent, IMovement
     
     public void SetMaxSpeed(float newMaxSpeed)
     {
-        maxSpeed = newMaxSpeed;
+        currentMaxSpeed = newMaxSpeed;
     }
 }

@@ -110,8 +110,6 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-
-    
     private void OnJoystickInput(Vector2 direction)
     {
     }
