@@ -98,18 +98,4 @@ public class Player : Unit
     {
         currentTarget = null;
     }
-
-
-    // private void OnGUI()
-    // {
-    //     style = new GUIStyle();
-    //     style.fontSize = 40;
-    //
-    //     var sb = new StringBuilder();
-    //     var currentTargetStr = currentTarget == null ? "null" : currentTarget.gameObject.name;
-    //     sb.AppendLine($"current target: {currentTargetStr}");
-    //     sb.AppendLine($"current speed: {rb.velocity}");
-    //     var str = sb.ToString();
-    //     GUI.Label(new Rect(10, 150, 200, 30), $"{str}", style);
-    // }
 }

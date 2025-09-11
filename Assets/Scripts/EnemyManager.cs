@@ -69,7 +69,7 @@ public class EnemyManager : MonoBehaviour
     }
     
     // Find closest enemy to position
-    public Unit GetClosestEnemy(Vector3 position)
+    public Unit GetClosestEnemy(Vector3 position, float range = float.MaxValue)
     {
         if (activeEnemies.Count == 0) return null;
         
@@ -84,7 +84,9 @@ public class EnemyManager : MonoBehaviour
             var distance = Vector3.Distance(position, enemy.Position);
             if (distance < closestDistance) {
                 closestDistance = distance;
-                closest = enemy;
+                if (closestDistance < range) {
+                    closest = enemy;
+                }
             }
         }
         
