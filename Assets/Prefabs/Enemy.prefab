@@ -54,7 +54,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 10
-  currentHealth: 10
 --- !u!114 &3501546182436520260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Unit
   unitID: EnemySimple
+  physicalMaterial: {fileID: 11400000, guid: 7ede30aaacfd74896936186216911cb7, type: 2}
 --- !u!114 &9066316854859551554
 MonoBehaviour:
   m_ObjectHideFlags: 0

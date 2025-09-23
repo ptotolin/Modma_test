@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Unit : MonoBehaviour, IResettable
+public abstract class Unit : MonoBehaviour, IResettable, IHasMaterial
 {
     // Events
     public event Action<Unit> EventInitialized;
@@ -10,6 +10,9 @@ public abstract class Unit : MonoBehaviour, IResettable
     [Header("Unit Info")]
     [SerializeField] private string unitName = "Unit";
     [SerializeField] private string unitID;
+
+    [Header("Material")] 
+    [SerializeField] private GameObjectPhysicalMaterial physicalMaterial;
     
     // Components cache
     private Dictionary<System.Type, IUnitComponent> components = new Dictionary<System.Type, IUnitComponent>();
@@ -23,6 +26,7 @@ public abstract class Unit : MonoBehaviour, IResettable
     public string ID => unitID;
     public Vector3 Position => transform.position;
     public bool IsAlive { get; private set; } = true;
+    public GameObjectPhysicalMaterial Material => physicalMaterial;
     
     protected virtual void Awake()
     {

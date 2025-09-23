@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IHasMaterial
 {
     // Events
     public event Action<Unit> EventHitTarget;
     public event Action EventDestroyed;
+    
     
     [Header("Projectile Settings")]
     [SerializeField] private float damage = 25f;
@@ -15,8 +16,10 @@ public class Projectile : MonoBehaviour
     [SerializeField] private LayerMask targetLayers = -1;
     
     [Header("Effects")]
-    [SerializeField] private GameObject hitEffect;
     [SerializeField] private bool createHitEffect = true;
+
+    [Header("Material")] 
+    [SerializeField] private GameObjectPhysicalMaterial physicalMaterial;
     
     private Unit owner;
     private bool hasHit = false;
@@ -27,6 +30,9 @@ public class Projectile : MonoBehaviour
     public float Speed => speed;
     public Unit Owner => owner;
     public bool HasHit => hasHit;
+    // IHasMaterial
+    public GameObjectPhysicalMaterial Material => physicalMaterial;
+
     
     private void Start()
     {
@@ -94,13 +100,16 @@ public class Projectile : MonoBehaviour
     private void HandleCollision(Collider2D other)
     {
         // Prevent multiple hits
-        if (hasHit) return;
+        if (hasHit) 
+            return;
         
         // Check if target is on valid layer
-        if (!IsValidTarget(other)) return;
+        if (!IsValidTarget(other)) 
+            return;
         
         // Don't hit owner
-        if (owner != null && other.transform == owner.transform) return;
+        if (owner != null && other.transform == owner.transform) 
+            return;
         
         // Temporary solution
         Unit targetUnit = other.GetComponentInParent<Unit>();
@@ -110,7 +119,13 @@ public class Projectile : MonoBehaviour
         
         // Create hit effect
         if (createHitEffect) {
-            CreateHitEffect(other.ClosestPoint(transform.position));
+            IHasMaterial targetObject = other.GetComponentInParent<IHasMaterial>();
+            if (targetObject != null) {
+                CreateHitEffect(other.ClosestPoint(transform.position), targetObject.Material);
+            }
+            else {
+                Debug.LogWarning($"No hit effect found for bullet because IHasMaterial");
+            }
         }
         
         hasHit = true;
@@ -138,13 +153,14 @@ public class Projectile : MonoBehaviour
         }
     }
     
-    private void CreateHitEffect(Vector3 hitPosition)
+    private void CreateHitEffect(Vector3 hitPosition, GameObjectPhysicalMaterial targetMaterial)
     {
+        var hitEffect = BulletHitEffectsRepository.Instance.GetEffectPrefab(Material, targetMaterial);
         if (hitEffect != null) {
             GameObject effect = Instantiate(hitEffect, hitPosition, Quaternion.identity);
             
             // Auto-destroy effect after some time
-            ParticleSystem particles = effect.GetComponent<ParticleSystem>();
+            var particles = effect.GetComponent<ParticleSystem>();
             if (particles != null) {
                 Destroy(effect, particles.main.duration + particles.main.startLifetime.constantMax);
             } else {

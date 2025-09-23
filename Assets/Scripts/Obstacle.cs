@@ -1,12 +1,16 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Obstacle : MonoBehaviour
+public class Obstacle : MonoBehaviour, IHasMaterial
 {
     [Header("Obstacle Settings")]
     [SerializeField] private bool isStatic = true;
     [SerializeField] private bool canPushPlayer = false;
     [SerializeField] private float pushForce = 5f;
+    [SerializeField] private GameObjectPhysicalMaterial physicalMaterial;
+
+    public GameObjectPhysicalMaterial Material => physicalMaterial;
     
     private void Awake()
     {

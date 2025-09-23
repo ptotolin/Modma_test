@@ -1452,6 +1452,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1277042661}
     - target: {fileID: 4742181777605624142, guid: a11f208b75625479e97245ee7d795b00, type: 3}
+      propertyPath: physicalMaterial
+      value: 
+      objectReference: {fileID: 11400000, guid: 7ede30aaacfd74896936186216911cb7, type: 2}
+    - target: {fileID: 4742181777605624142, guid: a11f208b75625479e97245ee7d795b00, type: 3}
       propertyPath: fireAnimationClip
       value: 
       objectReference: {fileID: 7400000, guid: 22a17714422af4abeb028d8e924e36e2, type: 2}

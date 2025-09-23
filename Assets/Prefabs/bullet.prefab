@@ -205,8 +205,8 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 9
-  hitEffect: {fileID: 1040424530218140156, guid: 5d0edfc6e1c244f77b94167f9fe16772, type: 3}
   createHitEffect: 1
+  physicalMaterial: {fileID: 11400000, guid: 0d0feb69afd0047879389445e9a73e08, type: 2}
 --- !u!50 &8439151866435545543
 Rigidbody2D:
   serializedVersion: 4

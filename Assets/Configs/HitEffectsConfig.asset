@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c33fa5343343b09eca9ca197236e47, type: 3}
+  m_Name: HitEffectsConfig
+  m_EditorClassIdentifier: 
+  HitEffects:
+  - BulletMaterial: {fileID: 11400000, guid: 0d0feb69afd0047879389445e9a73e08, type: 2}
+    TargetMaterial: {fileID: 11400000, guid: 7ede30aaacfd74896936186216911cb7, type: 2}
+    EffectPrefab: {fileID: 1040424530218140156, guid: 5d0edfc6e1c244f77b94167f9fe16772, type: 3}
+  - BulletMaterial: {fileID: 11400000, guid: 0d0feb69afd0047879389445e9a73e08, type: 2}
+    TargetMaterial: {fileID: 11400000, guid: 0d0feb69afd0047879389445e9a73e08, type: 2}
+    EffectPrefab: {fileID: 6772921264590307246, guid: 1a6a84c6c04fb4e478852e2dbc1154c8, type: 3}
