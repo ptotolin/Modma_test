@@ -1032,8 +1032,24 @@ MonoBehaviour:
     width: 1
     height: 1
   player: {fileID: 610436627}
-  enemyPrefab: {fileID: 3501546182436520260, guid: 2a4b041e33b944c83b69c80bbb97ceae, type: 3}
   newEnemySpawnTime: 1
+  waves:
+  - BeforeTime: 2
+    Duration: 10
+    AfterTime: 1
+    EnemiesAppearData:
+    - EnemyPrefab: {fileID: 2036488596647226649, guid: 2a4b041e33b944c83b69c80bbb97ceae, type: 3}
+      AppearScore: 1
+    NewEnemySpawnTime: 1
+  - BeforeTime: 2
+    Duration: 50
+    AfterTime: 1
+    EnemiesAppearData:
+    - EnemyPrefab: {fileID: 2036488596647226649, guid: 2a4b041e33b944c83b69c80bbb97ceae, type: 3}
+      AppearScore: 5
+    - EnemyPrefab: {fileID: 2036488596647226649, guid: 5223bfe4fe961479e8c13fae46a196bd, type: 3}
+      AppearScore: 1
+    NewEnemySpawnTime: 0.5
 --- !u!4 &1664019392
 Transform:
   m_ObjectHideFlags: 0

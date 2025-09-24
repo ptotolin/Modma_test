@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6137230399863820113}
   - component: {fileID: 2933707112427836502}
   m_Layer: 3
-  m_Name: Enemy
+  m_Name: BigEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40406625e9c84b06a5bb046877f45bf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 200
 --- !u!114 &3501546182436520260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,8 +81,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d977644f7fca648e38a4a9e9992b6508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 10
-  acceleration: 8
+  maxSpeed: 5
+  acceleration: 4
   drag: 5
   forceMode: 0
 --- !u!114 &5655339034844554570
@@ -273,7 +273,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.16
+  m_Radius: 0.32
 --- !u!1 &8782778546432112762
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,7 +301,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7648827522746964115}
@@ -326,7 +326,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c06c6bccbc54549919523d5c363a073c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -348,7 +348,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 06b84f96a3c1a460b8143133d173a269, type: 3}
-  m_Color: {r: 0.0754717, g: 0.07084372, b: 0.07084372, a: 1}
+  m_Color: {r: 0, g: 0.7075472, b: 0.69293946, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
