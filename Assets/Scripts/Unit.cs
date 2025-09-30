@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.Serialization;
 
 public abstract class Unit : MonoBehaviour, IResettable, IHasMaterial
 {
@@ -11,8 +14,11 @@ public abstract class Unit : MonoBehaviour, IResettable, IHasMaterial
     [SerializeField] private string unitName = "Unit";
     [SerializeField] private string unitID;
 
+    [FormerlySerializedAs("physicalMaterial")]
     [Header("Material")] 
-    [SerializeField] private GameObjectPhysicalMaterial physicalMaterial;
+    [SerializeField] private AssetReferenceT<GameObjectPhysicalMaterial> physicalMaterialReference;
+
+    private GameObjectPhysicalMaterial physicalMaterial;
     
     // Components cache
     private Dictionary<System.Type, IUnitComponent> components = new Dictionary<System.Type, IUnitComponent>();
@@ -34,6 +40,12 @@ public abstract class Unit : MonoBehaviour, IResettable, IHasMaterial
         if (string.IsNullOrEmpty(unitID)) {
             unitID = System.Guid.NewGuid().ToString();
         }
+
+        physicalMaterialReference.LoadAssetAsync<GameObjectPhysicalMaterial>().Completed += handle => {
+            if (handle.Status == AsyncOperationStatus.Succeeded) {
+                physicalMaterial = handle.Result;
+            }
+        };
         
         InitializeComponents();
     }
@@ -47,6 +59,7 @@ public abstract class Unit : MonoBehaviour, IResettable, IHasMaterial
     private void OnDestroy()
     {
         unitPresenter.Dispose();
+        physicalMaterialReference.ReleaseAsset();
     }
     
     public virtual void Reset()

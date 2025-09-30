@@ -183,6 +183,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Unit
   unitID: Player
+  physicalMaterialReference:
+    m_AssetGUID: 7ede30aaacfd74896936186216911cb7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  anim: {fileID: 0}
+  fireAnimationClip: {fileID: 0}
 --- !u!114 &8088073346504949990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,7 +217,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 100
 --- !u!114 &513587964961340730
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -103,7 +103,7 @@ public class EnemySpawner : MonoBehaviour
     private GameObject GetEnemyFromWave(WaveInfo wave)
     {
         var sum = wave.EnemiesAppearData.Sum(t => t.AppearScore);
-        var score = Random.Range(0, sum);
+        var score = Random.Range(0, sum + 1);
         var index = 0;
         int currentScore = wave.EnemiesAppearData[index].AppearScore;
         for (var i = 0; i < wave.EnemiesAppearData.Count; ++i) {

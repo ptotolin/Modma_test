@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class UIInitializer : MonoBehaviour
@@ -16,6 +17,12 @@ public class UIInitializer : MonoBehaviour
     private void Start()
     {
         InitializeUI();
+    }
+
+    public UniTask Initialize()
+    {
+        InitializeUI();
+        return UniTask.CompletedTask;
     }
     
     private void InitializeUI()

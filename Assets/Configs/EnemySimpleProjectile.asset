@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f16e38cd0504d5ca53333b9f89933f6, type: 3}
+  m_Name: EnemySimpleProjectile
+  m_EditorClassIdentifier: 
+  WeaponName: Projectile Gun
+  Damage: 5
+  FireRate: 1
+  Range: 3
+  ReloadTime: 2
+  MaxAmmo: 100000
+  ProjectilePrefab: {fileID: 7399038658667863785, guid: 7b2921808527e4737b777ded6c4bdd13, type: 3}
+  ProjectileSpeed: 5

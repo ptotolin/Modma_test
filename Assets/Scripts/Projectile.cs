@@ -155,8 +155,15 @@ public class Projectile : MonoBehaviour, IHasMaterial
     
     private void CreateHitEffect(Vector3 hitPosition, GameObjectPhysicalMaterial targetMaterial)
     {
+        Debug.Log($"[Client] === Creating Hit Effect ===");
+        Debug.Log($"[Client] Position: {hitPosition}");
+        Debug.Log($"[Client] Bullet Material: {Material?.name ?? "NULL"}");
+        Debug.Log($"[Client] Target Material: {targetMaterial?.name ?? "NULL"}");
+        
         var hitEffect = BulletHitEffectsRepository.Instance.GetEffectPrefab(Material, targetMaterial);
+        Debug.Log($"[Client] Hit Effect Prefab: {hitEffect?.name ?? "NULL"}");
         if (hitEffect != null) {
+            Debug.Log("[Client] ✅ Instantiating effect...");
             GameObject effect = Instantiate(hitEffect, hitPosition, Quaternion.identity);
             
             // Auto-destroy effect after some time
@@ -166,6 +173,8 @@ public class Projectile : MonoBehaviour, IHasMaterial
             } else {
                 Destroy(effect, 2f); // Default 2 seconds
             }
+        } else {
+            Debug.LogError("[Client] ❌ Hit Effect is NULL!");
         }
     }
     

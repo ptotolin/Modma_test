@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Test group
+  m_EditorClassIdentifier: 
+  m_GroupName: Test group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: f6ba153d013874c08a85223b860c7a03
+  m_SerializeEntries:
+  - m_GUID: 5223bfe4fe961479e8c13fae46a196bd
+    m_Address: Assets/Prefabs/BigEnemy.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e9953d1b84324693a5a22c27c7192f6
+    m_Address: Assets/Prefabs
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87ebf7f8ed98a4b6f891bc3917b521be
+    m_Address: Assets/Materials
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c4047826a82a4acb93c1704739c6273
+    m_Address: Assets/Animations
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d0edfc6e1c244f77b94167f9fe16772
+    m_Address: Assets/Prefabs/BodyHitEffect.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f87c546b96f4347c5b1c2115738f4659
+    m_Address: Assets/Prefabs/FiringEnemy.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1a6a84c6c04fb4e478852e2dbc1154c8
+    m_Address: Assets/Prefabs/Metal-Metal-HitEffect.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a11f208b75625479e97245ee7d795b00
+    m_Address: Assets/Prefabs/Player.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a4b041e33b944c83b69c80bbb97ceae
+    m_Address: Assets/Prefabs/SimpleEnemy.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88ce97c40c04d4f8f9764a0d043c374d
+    m_Address: Assets/Prefabs/bullet.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b2921808527e4737b777ded6c4bdd13
+    m_Address: Assets/Prefabs/enemy bullet.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d3dc2ae790a1c4e789c270b731884c8f
+    m_Address: Assets/Prefabs/MapObjects
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 37e8e7b1ba7f24825a47d5dc334efa47
+    m_Address: Assets/Prefabs/MapObjects/Obstacles
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 201ffca1b435743c8849d181da58adbe
+    m_Address: Assets/Prefabs/MapObjects/Obstacles/ObstacleRect.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f13b3bfa6be9b4b22a4df53d0af37966
+    m_Address: Assets/Animations/Unit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22a17714422af4abeb028d8e924e36e2
+    m_Address: Assets/Animations/Unit/FireAnim.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 347d3cebba0174849a39920e8fff2ea4
+    m_Address: Assets/Animations/Unit/UnitHitAnim.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c06c6bccbc54549919523d5c363a073c
+    m_Address: Assets/Materials/EnemyMaterial.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa6c1d11f855e4914b4c9f90e38a8d9e
+    m_Address: Assets/Materials/SparksMaterial.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e3cc0f5304094dd9a6eda106bd6d428
+    m_Address: Assets/Configs
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ede30aaacfd74896936186216911cb7
+    m_Address: Assets/Configs/BodyMaterial.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 528fcf7a2305f425a8a0057a4fa5a30c
+    m_Address: Assets/Configs/EnemySimpleProjectile.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bfcb14b5dcd194149b663ea017610d7d
+    m_Address: Assets/Configs/HitEffectsConfig.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d0feb69afd0047879389445e9a73e08
+    m_Address: Assets/Configs/MetalMaterial.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 05bafbad1fd88440aab781dd6603b9b5
+    m_Address: Assets/Configs/ProjectileConfig.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 91299519f7d9f4d9d9ebce1965524901, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 2046d77e785df412da5ad39b9429cd35, type: 2}
+    - {fileID: 11400000, guid: 61936408060204daaa5bd07163f78b27, type: 2}

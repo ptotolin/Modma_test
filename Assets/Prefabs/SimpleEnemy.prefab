@@ -68,7 +68,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Unit
   unitID: EnemySimple
-  physicalMaterial: {fileID: 11400000, guid: 7ede30aaacfd74896936186216911cb7, type: 2}
+  physicalMaterialReference:
+    m_AssetGUID: 7ede30aaacfd74896936186216911cb7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
 --- !u!114 &9066316854859551554
 MonoBehaviour:
   m_ObjectHideFlags: 0

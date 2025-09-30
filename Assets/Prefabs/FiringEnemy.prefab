@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6137230399863820113}
   - component: {fileID: 2933707112427836502}
   m_Layer: 3
-  m_Name: BigEnemy
+  m_Name: FiringEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40406625e9c84b06a5bb046877f45bf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
+  maxHealth: 10
 --- !u!114 &3501546182436520260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,8 +85,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d977644f7fca648e38a4a9e9992b6508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 5
-  acceleration: 4
+  maxSpeed: 7
+  acceleration: 5
   drag: 5
   forceMode: 0
 --- !u!114 &5655339034844554570
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 7648827522746964115}
-  weaponBehaviour: {fileID: 6465042430354410028}
+  weaponBehaviour: {fileID: 257197061640290437}
 --- !u!114 &7902204566571432367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1215431991857530512}
-  - component: {fileID: 6465042430354410028}
+  - component: {fileID: 257197061640290437}
   m_Layer: 3
   m_Name: Weapon
   m_TagString: Untagged
@@ -193,7 +193,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7648827522746964115}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6465042430354410028
+--- !u!114 &257197061640290437
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -202,15 +202,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5070088693987073241}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07844c4eaf8b7452b88b021439fb90d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 33f3c7424b69842a2b92aed6aa09e934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 3
-  range: 0.5
-  attackRate: 1
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
+  config: {fileID: 11400000, guid: 528fcf7a2305f425a8a0057a4fa5a30c, type: 2}
 --- !u!1 &7524501399743763481
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +272,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.32
+  m_Radius: 0.16
 --- !u!1 &8782778546432112762
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +300,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7648827522746964115}
@@ -352,7 +347,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 06b84f96a3c1a460b8143133d173a269, type: 3}
-  m_Color: {r: 0, g: 0.7075472, b: 0.69293946, a: 1}
+  m_Color: {r: 0.7169812, g: 0, b: 0.6952463, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

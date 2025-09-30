@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Obstacle : MonoBehaviour, IHasMaterial
@@ -8,13 +10,20 @@ public class Obstacle : MonoBehaviour, IHasMaterial
     [SerializeField] private bool isStatic = true;
     [SerializeField] private bool canPushPlayer = false;
     [SerializeField] private float pushForce = 5f;
-    [SerializeField] private GameObjectPhysicalMaterial physicalMaterial;
+    [SerializeField] private AssetReferenceT<GameObjectPhysicalMaterial> physicalMaterialReference;
 
+    private GameObjectPhysicalMaterial physicalMaterial;
+    
     public GameObjectPhysicalMaterial Material => physicalMaterial;
     
     private void Awake()
     {
         SetupRigidbody();
+        physicalMaterialReference.LoadAssetAsync<GameObjectPhysicalMaterial>().Completed += handle => {
+            if (handle.Status == AsyncOperationStatus.Succeeded) {
+                physicalMaterial = handle.Result;
+            }
+        };
     }
     
     private void SetupRigidbody()
