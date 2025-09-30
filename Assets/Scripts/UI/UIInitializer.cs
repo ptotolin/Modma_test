@@ -10,9 +10,22 @@ public class UIInitializer : MonoBehaviour
     
     [Header("Health UI")]
     [SerializeField] private HealthbarView healthbarView;
+
+    [Header("FPS Counter")]
+    [SerializeField] private FPSCounter fpsCounter;
     
     // Presenters cache
     private List<IDisposable> presenters = new List<IDisposable>();
+
+    private void OnEnable()
+    {
+        DebugLogOnGUI.Instance.WatchVariable("fpsCounter", GetCurrentFPS);
+    }
+
+    private void OnDisable()
+    {
+        DebugLogOnGUI.Instance.UnwatchVariable("fpsCounter");
+    }
     
     private void Start()
     {
@@ -24,6 +37,12 @@ public class UIInitializer : MonoBehaviour
         InitializeUI();
         return UniTask.CompletedTask;
     }
+    
+    private object GetCurrentFPS()
+    {
+        return fpsCounter.CurrentFPS;
+    }
+
     
     private void InitializeUI()
     {

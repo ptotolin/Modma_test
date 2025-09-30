@@ -17,6 +17,8 @@ public class GameBootstrap : MonoBehaviour
     {
         Debug.Log("[Client] === Game Bootstrap Starting ===");
 
+        Application.targetFrameRate = 60;
+        
         await InitializeAddressables();
 
         InitializeSystems();
