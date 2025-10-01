@@ -23,6 +23,8 @@ public struct WaveInfo
 
 public class EnemySpawner : MonoBehaviour
 {
+    public event Action<int> EventNextWave;
+    
     enum Sides
     {
         Left,
@@ -48,6 +50,7 @@ public class EnemySpawner : MonoBehaviour
     {
         worldBounds = WorldBounds.Instance;
         player.GetComponent<HealthComponent>().EventDeath += OnDie;
+        EventNextWave?.Invoke(0);
     }
 
     private void OnDie(Unit playerUnit)
@@ -89,6 +92,7 @@ public class EnemySpawner : MonoBehaviour
         else {
             if (currentWaveIndex < waves.Count - 1) {
                 currentWaveIndex++;
+                EventNextWave?.Invoke(currentWaveIndex);
                 currentWaveTotalDuration = 0.0f;
             }
             else {

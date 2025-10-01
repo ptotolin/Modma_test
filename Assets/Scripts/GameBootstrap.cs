@@ -53,8 +53,9 @@ public class GameBootstrap : MonoBehaviour
     {
         Debug.Log("[Client] Initializing UI...");
 
-        // Инициализация UI
-        var uiInitializer = FindObjectOfType<UIInitializer>();
+        // Temporary 
+        // TODO: Make ScreenManager.Push<GameScreen>();
+        var uiInitializer = FindObjectOfType<GameScreen>();
         if (uiInitializer != null) {
             await uiInitializer.Initialize();
             Debug.Log("[Client] ✅ UI initialized");
