@@ -1136,23 +1136,19 @@ MonoBehaviour:
   player: {fileID: 610436627}
   newEnemySpawnTime: 1
   waves:
-  - BeforeTime: 2
-    Duration: 20
-    AfterTime: 1
+  - MaxEnemies: 50
     EnemiesAppearData:
     - EnemyPrefab: {fileID: 2036488596647226649, guid: 2a4b041e33b944c83b69c80bbb97ceae, type: 3}
       AppearScore: 1
     NewEnemySpawnTime: 1
-  - BeforeTime: 2
-    Duration: 50
-    AfterTime: 1
+  - MaxEnemies: 100
     EnemiesAppearData:
     - EnemyPrefab: {fileID: 2036488596647226649, guid: 2a4b041e33b944c83b69c80bbb97ceae, type: 3}
-      AppearScore: 7
+      AppearScore: 20
     - EnemyPrefab: {fileID: 2036488596647226649, guid: 5223bfe4fe961479e8c13fae46a196bd, type: 3}
       AppearScore: 1
     - EnemyPrefab: {fileID: 2036488596647226649, guid: f87c546b96f4347c5b1c2115738f4659, type: 3}
-      AppearScore: 2
+      AppearScore: 5
     NewEnemySpawnTime: 0.8
 --- !u!4 &1664019392
 Transform:

@@ -14,9 +14,7 @@ public struct EnemyAppearData
 [Serializable]
 public struct WaveInfo
 {
-    public float BeforeTime;
-    public float Duration;
-    public float AfterTime;
+    public uint MaxEnemies;
     public List<EnemyAppearData> EnemiesAppearData;
     public float NewEnemySpawnTime;
 }
@@ -45,17 +43,27 @@ public class EnemySpawner : MonoBehaviour
     private bool playerDied;
     private int currentWaveIndex;
     private float currentWaveTotalDuration;
+    private int currentWaveEnemiesSpawned;
 
     private void Start()
     {
         worldBounds = WorldBounds.Instance;
         player.GetComponent<HealthComponent>().EventDeath += OnDie;
         EventNextWave?.Invoke(0);
+        EnemyManager.Instance.EventEnemyDestroyed += OnEnemyDestroyed;
+        DebugLogOnGUI.Instance.WatchVariable("enemies destroyed", () => currentWaveEnemiesSpawned);
     }
 
     private void OnDie(Unit playerUnit)
     {
         playerDied = true;
+        EnemyManager.Instance.EventEnemyDestroyed -= OnEnemyDestroyed;
+        DebugLogOnGUI.Instance.UnwatchVariable("enemies destroyed");
+
+    }
+
+    private void OnEnemyDestroyed(Unit unit)
+    {
     }
 
     private void Update()
@@ -63,45 +71,39 @@ public class EnemySpawner : MonoBehaviour
         if (playerDied) {
             return;
         }
-        var currentWave = waves[currentWaveIndex];
-        if (currentWaveTotalDuration <= currentWave.BeforeTime) {
-            //Debug.Log($"[Client] Entered Before wave phase");
-        } else 
-        if (currentWaveTotalDuration > currentWave.BeforeTime && 
-            currentWaveTotalDuration < currentWave.BeforeTime + currentWave.Duration) {
-            //Debug.Log($"[Client] Entered wave phase");
-            if (EnemyManager.Instance.EnemyCount < maxEnemies) {
-                spawnTimer += Time.deltaTime;
-                if (spawnTimer > currentWave.NewEnemySpawnTime) {
-                    spawnTimer -= currentWave.NewEnemySpawnTime;
 
+        var currentWave = waves[currentWaveIndex];
+
+        if (EnemyManager.Instance.EnemyCount < maxEnemies) {
+            spawnTimer += Time.deltaTime;
+            if (spawnTimer > currentWave.NewEnemySpawnTime) {
+                spawnTimer -= currentWave.NewEnemySpawnTime;
+
+                if (currentWaveEnemiesSpawned < currentWave.MaxEnemies) {
                     var enemyPrefab = GetEnemyFromWave(currentWave);
                     if (enemyPrefab != null) {
-                        SpawnEnemy(enemyPrefab);
+                        if (TrySpawnEnemy(enemyPrefab)) {
+                            currentWaveEnemiesSpawned++;
+                        }
                     }
                     else {
                         Debug.LogError($"enemy prefab was not found");
                     }
+                } else if (EnemyManager.Instance.EnemyCount == 0) {
+                    MoveToNextWave();
                 }
-            }
-        } else if (currentWaveTotalDuration > currentWave.BeforeTime + currentWave.Duration && 
-                   currentWaveTotalDuration < currentWave.BeforeTime + currentWave.Duration + currentWave.AfterTime) {
-            // after wave period
-            //Debug.Log($"[Client] Entered After wave phase");
-        }
-        else {
-            if (currentWaveIndex < waves.Count - 1) {
-                currentWaveIndex++;
-                EventNextWave?.Invoke(currentWaveIndex);
-                currentWaveTotalDuration = 0.0f;
-            }
-            else {
-                Debug.Break();
             }
         }
         
         currentWaveTotalDuration += Time.deltaTime;
-       
+    }
+
+    private void MoveToNextWave()
+    {
+        currentWaveIndex++;
+        EventNextWave?.Invoke(currentWaveIndex);
+        currentWaveTotalDuration = 0.0f;
+        currentWaveEnemiesSpawned = 0;
     }
 
     private GameObject GetEnemyFromWave(WaveInfo wave)
@@ -126,16 +128,18 @@ public class EnemySpawner : MonoBehaviour
     }
 
 
-    private void SpawnEnemy(GameObject enemyPrefab)
+    private bool TrySpawnEnemy(GameObject enemyPrefab)
     {
         var enemy = ObjectPool.Instance.Spawn<SimpleEnemy>(enemyPrefab.gameObject, GenerateRandomPointOutsideBounds());
         if (enemy != null) {
             enemy.SetTarget(player);
             EnemyManager.Instance.RegisterEnemy(enemy);
+            return true;
         }
-        else {
-            Debug.LogError($"Can't instantiate enemy for some reason");
-        }
+
+        Debug.LogError($"Can't instantiate enemy for some reason");
+
+        return false;
     }
 
     private Vector2 GenerateRandomPointOutsideBounds()
